@@ -1,2 +1,2 @@
-# fl_test_go
-go autotests for FL
+# fl_test_perl
+perl autotests for FL
