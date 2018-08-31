@@ -1,0 +1,24 @@
+version: '3.1'
+
+networks:
+  test-net:
+
+services:
+
+  chrome:
+    image: justinribeiro/chrome-headless
+    cap_add:
+      - SYS_ADMIN
+    ports:
+      - 9222:9222
+    networks:
+      - test-net
+    restart: always
+
+  test:
+    image: demiurg/fl_autotest
+    depends_on:
+      - chrome
+    networks:
+      - test-net
+    restart: always
