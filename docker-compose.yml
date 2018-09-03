@@ -17,7 +17,7 @@ services:
     restart: always
 
   test:
-    image: demiurg/fl_autotest
+    image: demiurg/fl_autotest_perl
     build: .
     depends_on:
       - chrome
