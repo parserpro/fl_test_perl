@@ -7,8 +7,11 @@ use WWW::Mechanize::Chrome;
 
 Log::Log4perl->easy_init($ERROR);  # Set priority of root logger to ERROR
 
+while (1) {sleep 10;}
+
 my $mech = WWW::Mechanize::Chrome->new(
     host => 'chrome',
+#    host => '127.0.0.1',
     port => 9222,
     reuse => 1,
     launch_arg => [
@@ -26,6 +29,8 @@ use Test::Simple "no_plan";
 $mech->get('https://fantlab.ru');
 
 ok( $mech->status == 200, 'Сайт работает');
+
+
 
 #$mech->eval_in_page('alert("Hello Chrome")');
 #my $png = $mech->content_as_png();

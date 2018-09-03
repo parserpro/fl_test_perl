@@ -7,22 +7,22 @@ services:
 
   chrome:
     image: justinribeiro/chrome-headless
-    container_name: chrome
+#    container_name: chrome
     cap_add:
       - SYS_ADMIN
-    ports:
-      - 9222:9222
+#    ports:
+#      - 9222
     networks:
       - test-net
     restart: always
 
   test:
-    image: demiurg/fl_autotest_perl
+    image: demiurg/fl_autotest_perl:1
     build: .
     depends_on:
       - chrome
     networks:
       - test-net
-    links:
-      - chrome
+#    links:
+#      - chrome
     restart: always
