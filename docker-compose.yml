@@ -7,6 +7,7 @@ services:
 
   chrome:
     image: justinribeiro/chrome-headless
+    container_name: chrome
     cap_add:
       - SYS_ADMIN
     ports:
@@ -17,8 +18,11 @@ services:
 
   test:
     image: demiurg/fl_autotest
+    build: .
     depends_on:
       - chrome
     networks:
       - test-net
+    links:
+      - chrome
     restart: always

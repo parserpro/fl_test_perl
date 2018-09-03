@@ -8,7 +8,7 @@ use WWW::Mechanize::Chrome;
 Log::Log4perl->easy_init($ERROR);  # Set priority of root logger to ERROR
 
 my $mech = WWW::Mechanize::Chrome->new(
-    host => '127.0.0.1',
+    host => 'chrome',
     port => 9222,
     reuse => 1,
     launch_arg => [
