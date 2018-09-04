@@ -13,4 +13,5 @@ RUN cpanm --no-wget -n utf8::all
 
 WORKDIR /srv/autotest/
 COPY ./t ./t
-ENTRYPOINT ["prove", "./t"]
+#ENTRYPOINT ["prove", "./t"]
+ENTRYPOINT ["./t/1.pl"]
