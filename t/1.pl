@@ -9,6 +9,10 @@ Log::Log4perl->easy_init($ERROR);  # Set priority of root logger to ERROR
 
 #while (1) {sleep 10;}
 
+my @ping = `ping -c 5 news-monitor.search.km`;
+
+say join('', @ping);
+
 my $mech = WWW::Mechanize::Chrome->new(
     host => 'chrome',
 #    host => '127.0.0.1',

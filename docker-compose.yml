@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.7'
 
 networks:
   test-net:
@@ -15,8 +15,9 @@ services:
 
   test:
     image: demiurg/fl_test_perl
-    depends_on:
-      - chrome
+    build: .
+#    depends_on:
+#      - chrome
     networks:
       - test-net
     restart: always
