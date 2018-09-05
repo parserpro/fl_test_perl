@@ -6,18 +6,23 @@ networks:
 services:
 
   chrome:
-    image: justinribeiro/chrome-headless
-    cap_add:
-      - SYS_ADMIN
+    image: alpeware/chrome-headless-trunk
+    logging:
+      driver: "none"
+    ports:
+      - "9222"
     networks:
       - test-net
-    restart: always
 
   test:
     image: demiurg/fl_test_perl
     build: .
-#    depends_on:
-#      - chrome
+    environment:
+      USER: ${USER}
+      PASSWORD: ${PASSWORD}
+#    entrypoint: ["bash", "-c", "sleep 2073600"]
+    entrypoint: ["./t/1.pl"]
+    volumes:
+      - "./t:/srv/autotest/t"
     networks:
       - test-net
-    restart: always

@@ -1,47 +1,82 @@
 #!/usr/bin/env perl
 use common::sense;
 use utf8::all;
+use Encode;
+use Data::Dumper;
 
+use Socket;
 use Log::Log4perl qw(:easy);
 use WWW::Mechanize::Chrome;
 
-Log::Log4perl->easy_init($ERROR);  # Set priority of root logger to ERROR
+sub d {
+    return decode( 'utf-8', $_[0] );
+}
 
-#while (1) {sleep 10;}
+sleep 10;
 
-my @ping = `ping -c 5 news-monitor.search.km`;
+# Set priority of root logger to ERROR
+Log::Log4perl->easy_init($ERROR);
 
-say join('', @ping);
+my $chrome_ip;
 
-my $mech = WWW::Mechanize::Chrome->new(
-    host => 'chrome',
-#    host => '127.0.0.1',
-    port => 9222,
-    reuse => 1,
-    launch_arg => [
-        '--window-size=1280x16960',
-        '--disable-gpu',
-        '--headless',
-        '--no-sandbox',
-        '--disable-dev-shm-usage',
-    ],
-    headless => 1,
-);
+eval {
+    $chrome_ip = inet_ntoa(inet_aton("chrome"));
+};
+
+$chrome_ip ||= 'localhost';
+
+#sleep 10 unless $chrome_ip ne 'localhost';
+
+my $mech;
+
+eval {
+    $mech = WWW::Mechanize::Chrome->new(
+        host => $chrome_ip,
+        port => 9222,
+        reuse => 1,
+        launch_arg => [
+            '--window-size=1280x16960',
+            '--disable-gpu',
+            '--headless',
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+        ],
+        headless => 1,
+    );
+};
+
+die "Can't run test - no Chrone connection!" unless $mech;
+
+# TODO: устанавливать из окружения
+$mech->viewport_size({ width => 1388, height => 792 });
 
 use Test::Simple "no_plan";
 
 $mech->get('https://fantlab.ru');
 
+my $status = $mech->status;
+
 ok( $mech->status == 200, 'Сайт работает');
 
+die "Can't run - site not working!" unless $status == 200;
 
+my $user = $ENV{USER};
+my $pass = $ENV{PASSWORD};
 
-#$mech->eval_in_page('alert("Hello Chrome")');
-#my $png = $mech->content_as_png();
-#open(my $PNG, '>', 'fl.png');
-#print $PNG $png;
-#close $PNG;
+ok( $mech->content_encoding eq 'text/html;charset=UTF-8', 'Кодировка');
+ok( $mech->base eq 'https://fantlab.ru/', 'Адрес');
+ok( $mech->content_type eq 'text/html', 'Тип контента');
+ok( d($mech->title) eq 'Лаборатория Фантастики', 'Заголовок сайта');
+ok( ref(($mech->selector('form.auth-form.bootstrap'))[0]) eq 'WWW::Mechanize::Chrome::Node', 'Форма логина');
 
-#open(my $TXT, '>', 'fl.txt');
-#print $TXT $mech->content;
-#close $TXT;
+# логинимся
+$mech->submit_form(
+    with_fields => {
+        login    => $user,
+        password => $pass,
+    },
+);
+
+my @n = $mech->selector('body > div.layout > div > header > div.middle-header > aside > div > div.left-block-body.clearfix > dl > dt:nth-child(1)');
+
+say Dumper \@n;
