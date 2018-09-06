@@ -25,8 +25,6 @@ eval {
 
 $chrome_ip ||= 'localhost';
 
-#sleep 10 unless $chrome_ip ne 'localhost';
-
 my $mech;
 
 eval {
@@ -60,7 +58,7 @@ ok( $mech->status == 200, 'Сайт работает');
 
 die "Can't run - site not working!" unless $status == 200;
 
-my $user = $ENV{USER};
+my $user = $ENV{FL_USER};
 my $pass = $ENV{PASSWORD};
 
 ok( $mech->content_encoding eq 'text/html;charset=UTF-8', 'Кодировка');

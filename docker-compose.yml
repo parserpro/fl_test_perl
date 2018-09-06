@@ -16,11 +16,9 @@ services:
 
   test:
     image: demiurg/fl_test_perl
-    build: .
     environment:
-      USER: ${USER}
+      FL_USER: ${FL_USER}
       PASSWORD: ${PASSWORD}
-#    entrypoint: ["bash", "-c", "sleep 2073600"]
     entrypoint: ["./t/1.pl"]
     volumes:
       - "./t:/srv/autotest/t"
