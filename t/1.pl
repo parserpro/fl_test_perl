@@ -17,6 +17,8 @@ sleep 10;
 # Set priority of root logger to ERROR
 Log::Log4perl->easy_init($ERROR);
 
+warn "Using WWW::Mechanize::Chrome version " . $WWW::Mechanize::Chrome::VERSION . "\n";
+
 my $chrome_ip;
 
 eval {
@@ -50,7 +52,9 @@ $mech->viewport_size({ width => 1388, height => 792 });
 
 use Test::Simple "no_plan";
 
-$mech->get('https://fantlab.ru');
+my $res = $mech->get('https://fantlab.ru');
+
+say Dumper $res;
 
 my $status = $mech->status;
 
@@ -68,13 +72,19 @@ ok( d($mech->title) eq 'Лаборатория Фантастики', 'Заго�
 ok( ref(($mech->selector('form.auth-form.bootstrap'))[0]) eq 'WWW::Mechanize::Chrome::Node', 'Форма логина');
 
 # логинимся
-$mech->submit_form(
+$res = $mech->submit_form(
     with_fields => {
         login    => $user,
         password => $pass,
     },
+    strict_forms => 1
 );
 
-my @n = $mech->selector('body > div.layout > div > header > div.middle-header > aside > div > div.left-block-body.clearfix > dl > dt:nth-child(1)');
+$res = $mech->forms;
 
-say Dumper \@n;
+say Dumper $res;
+
+$mech->wait_until_visible( selector => 'div.left-block-body.clearfix' );
+my @n = $mech->selector('body > div.layout > div > header > div.middle-header > aside > div > div.left-block-body.clearfix > dl > dt');
+my @a - $mech->selector('div.left-block-body.clearfix > dl > dd:nth-child(1) > b > a', all => 1);
+say Dumper( \@n, \@a);
