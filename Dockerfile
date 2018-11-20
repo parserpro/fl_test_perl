@@ -14,4 +14,3 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libpng-dev curl tar make g
     rm -fr /var/cache/apt
 
 WORKDIR /srv/autotest/
-#COPY ./t ./t

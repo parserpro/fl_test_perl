@@ -18,7 +18,7 @@ services:
     image: demiurg/fl_test_perl
     environment:
       FL_USER: ${FL_USER}
-      PASSWORD: ${PASSWORD}
+      PASSWORD: ${FL_PASSWORD}
     entrypoint: ["./t/1.pl"]
     volumes:
       - "./t:/srv/autotest/t"

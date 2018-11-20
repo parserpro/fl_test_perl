@@ -54,8 +54,6 @@ use Test::Simple "no_plan";
 
 my $res = $mech->get('https://fantlab.ru');
 
-say Dumper $res;
-
 my $status = $mech->status;
 
 ok( $mech->status == 200, 'Сайт работает');
@@ -80,11 +78,9 @@ $res = $mech->submit_form(
     strict_forms => 1
 );
 
-$res = $mech->forms;
+my @para_text = $mech->selector('div.left-block-body.clearfix > dl > dd b a');
+ok( ref $para_text[0] eq 'WWW::Mechanize::Chrome::Node', 'Залогинились 1');
+ok(lc( $para_text[0]->get_attribute('innerText') ) eq lc($user), 'Залогинились 2');
 
-say Dumper $res;
 
-$mech->wait_until_visible( selector => 'div.left-block-body.clearfix' );
-my @n = $mech->selector('body > div.layout > div > header > div.middle-header > aside > div > div.left-block-body.clearfix > dl > dt');
-my @a - $mech->selector('div.left-block-body.clearfix > dl > dd:nth-child(1) > b > a', all => 1);
-say Dumper( \@n, \@a);
+
