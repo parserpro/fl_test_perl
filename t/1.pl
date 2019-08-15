@@ -81,6 +81,3 @@ $res = $mech->submit_form(
 my @para_text = $mech->selector('div.left-block-body.clearfix > dl > dd b a');
 ok( ref $para_text[0] eq 'WWW::Mechanize::Chrome::Node', 'Залогинились 1');
 ok(lc( $para_text[0]->get_attribute('innerText') ) eq lc($user), 'Залогинились 2');
-
-
-
