@@ -8,9 +8,9 @@ use Socket;
 use Log::Log4perl qw(:easy);
 use WWW::Mechanize::Chrome;
 
-sub d {
-    return decode( 'utf-8', $_[0] );
-}
+#sub d {
+#    return decode( 'utf-8', $_[0] );
+#}
 
 sleep 10;
 
@@ -64,7 +64,8 @@ die "Can't run - site not working!" unless $status == 200;
 ok( $mech->content_encoding eq 'text/html;charset=UTF-8', 'Code page');
 ok( $mech->base eq 'https://fantlab.ru/', 'Address');
 ok( $mech->content_type eq 'text/html', 'Content type');
-ok( d($mech->title) eq 'Лаборатория Фантастики', 'Site title');
+#ok( d($mech->title) eq 'Лаборатория Фантастики', 'Site title');
+ok( $mech->title eq 'Лаборатория Фантастики', 'Site title');
 
 my $user = $ENV{FL_USER};
 my $pass = $ENV{PASSWORD};
