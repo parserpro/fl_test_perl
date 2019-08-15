@@ -1,4 +1,4 @@
-FROM perl:5.28-slim
+FROM perl:5.30-slim
 MAINTAINER Alexey Myshkin <parserpro@gmail.com>
 
 RUN apt-get update

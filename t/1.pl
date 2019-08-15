@@ -47,29 +47,31 @@ eval {
 
 die "Can't run test - no Chrone connection!" unless $mech;
 
-# TODO: устанавливать из окружения
+# TODO: take this from the environment
 $mech->viewport_size({ width => 1388, height => 792 });
 
+############################################ TESTS START HERE ##############################################
 use Test::Simple "no_plan";
 
 my $res = $mech->get('https://fantlab.ru');
 
 my $status = $mech->status;
 
-ok( $mech->status == 200, 'Сайт работает');
+ok( $mech->status == 200, 'Site works');
 
 die "Can't run - site not working!" unless $status == 200;
+
+ok( $mech->content_encoding eq 'text/html;charset=UTF-8', 'Code page');
+ok( $mech->base eq 'https://fantlab.ru/', 'Address');
+ok( $mech->content_type eq 'text/html', 'Content type');
+ok( d($mech->title) eq 'Лаборатория Фантастики', 'Site title');
 
 my $user = $ENV{FL_USER};
 my $pass = $ENV{PASSWORD};
 
-ok( $mech->content_encoding eq 'text/html;charset=UTF-8', 'Кодировка');
-ok( $mech->base eq 'https://fantlab.ru/', 'Адрес');
-ok( $mech->content_type eq 'text/html', 'Тип контента');
-ok( d($mech->title) eq 'Лаборатория Фантастики', 'Заголовок сайта');
-ok( ref(($mech->selector('form.auth-form.bootstrap'))[0]) eq 'WWW::Mechanize::Chrome::Node', 'Форма логина');
+ok( ref(($mech->selector('form.auth-form.bootstrap'))[0]) eq 'WWW::Mechanize::Chrome::Node', 'Login form');
 
-# логинимся
+# logging in
 $res = $mech->submit_form(
     with_fields => {
         login    => $user,
@@ -79,5 +81,6 @@ $res = $mech->submit_form(
 );
 
 my @para_text = $mech->selector('div.left-block-body.clearfix > dl > dd b a');
-ok( ref $para_text[0] eq 'WWW::Mechanize::Chrome::Node', 'Залогинились 1');
-ok(lc( $para_text[0]->get_attribute('innerText') ) eq lc($user), 'Залогинились 2');
+
+ok( ref $para_text[0] eq 'WWW::Mechanize::Chrome::Node', 'User info panel exists');
+ok(lc( $para_text[0]->get_attribute('innerText') ) eq lc($user), 'Found proper user login');

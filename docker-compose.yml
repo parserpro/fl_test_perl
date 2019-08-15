@@ -6,7 +6,7 @@ networks:
 services:
 
   chrome:
-    image: alpeware/chrome-headless-trunk
+    image: yukinying/chrome-headless-browser:68.0.3438.3
     logging:
       driver: "none"
     ports:
